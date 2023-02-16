@@ -1,0 +1,2 @@
+## 1.0.0
+  - Added two utilities methods `config_with_deprecated_target!` and `config_with_deprecated_value!`. [#1](https://github.com/logstash-plugins/logstash-mixin-config_deprecation_support/pulls/1)
