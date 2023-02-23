@@ -2,18 +2,20 @@
 
 [![Build Status](https://travis-ci.com/logstash-plugins/logstash-mixin-config_deprecation_support.svg?branch=main)](https://travis-ci.com/logstash-plugins/logstash-mixin-config_deprecation_support)
 
-This gem can be included in any `LogStash::Plugin`, and will provide utilities methods that can be used by the plugins to
-extract and deprecate configs.
+This gem can be included in any `LogStash::Plugin`, and will provide utilities methods
+that can be used by the plugins to
+extract and normalize configs.
 
 ## Usage
 
-1. Add version `~>1.0` of this gem as a runtime dependency of your Logstash plugin's `gemspec`:
+1. Add version `~>1.0` of this gem as a runtime dependency of your Logstash
+   plugin's `gemspec`:
 
     ~~~ ruby
     Gem::Specification.new do |s|
       # ...
 
-      s.add_runtime_dependency 'logstash-mixin-plugin_factory_support', '~>1.0'
+      s.add_runtime_dependency 'logstash-mixin-config_deprecation_support', '~>1.0'
     end
     ~~~
 
@@ -21,35 +23,50 @@ extract and deprecate configs.
    that already inherits `LogStash::Plugin`:
 
     ~~~ ruby
-    require 'logstash/plugin_mixins/config_deprecation_support'
+    require 'logstash/plugin_mixins/normalize_config_support'
 
     class LogStash::Inputs::Foo < Logstash::Inputs::Base
-      include LogStash::PluginMixins::ConfigDeprecationSupport
+      include LogStash::PluginMixins::NormalizeConfigSupport
 
       # ...
     end
     ~~~
 
-3. Use the provided `config_with_deprecated_target!` method to unambiguously extracts the
-   value of a param that may be provided with one or more deprecated params:
+3. Use the provided `normalize_config` method to normalize a configuration and to
+   produce a canonical value for it.
+   It currently supports the following normalizers:
+    - `with_deprecated_mapping`: Map one or more deprecated configs to the canonical
+      config
+    - `with_deprecated_alias`: Wholly-alias a deprecated config to the canonical
+      config
 
-    ~~~ ruby
-    def register
-      # ...
-      @ssl_enabled_final = config_with_deprecated_target!('ssl_enabled', 'ssl')
-    end
-    ~~~
+   ~~~ ruby
+   def register
+     # ...
+     @ssl_verification_mode = normalize_config(:ssl_verification_mode) do |normalize|
+        normalize.with_deprecated_mapping(:ssl_verify_mode) do |ssl_verify_mode|
+           case ssl_verify_mode
+           when "none" then "none"
+           when "peer" then "certificate"
+           when "force_peer" then "full"
+           else fail(LogStash::ConfigurationError, "Unsupported value #{ssl_verify_mode} for deprecated option `ssl_verify_mode`")
+        end
+     end
 
-    ~~~ ruby
-    def register
-      # ...
-      @ssl_protocols_final = config_with_deprecated_target!('ssl_supported_protocols', 'tls_min_version', 'tls_max_version') do |tls_min, tls_max|
-        TLS.supported_protocols(tls_min..tls_max)
-      end
-    end
-    ~~~
-   
+     @ssl_cipher_suites = normalize_config(:ssl_cipher_suites) do |normalize|
+        normalize.with_deprecated_alias(:cipher_suites)
+     end
+
+     @ssl_supported_protocols = normalize_config(:ssl_supported_protocols) do |normalize|
+        normalize.with_deprecated_mapping(:tls_min_version, :tls_max_version) do |tls_min, tls_max|
+           TLS.get_supported(tls_min..tls_max).map(&:name)
+        end
+     end
+   end
+   ~~~
+
 ## Development
 
 This gem:
+
 - *MUST NOT* introduce additional runtime dependencies
