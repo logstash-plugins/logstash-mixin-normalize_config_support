@@ -113,12 +113,12 @@ module LogStash
         def ensure_deprecated!(deprecated_alias)
           deprecated_alias.each do |dp|
             ensure_config_exists!(dp)
-            fail ArgumentError, "Config `#{dp}` not marked deprecated" unless @plugin.class.get_config.dig(dp, :deprecated)
+            fail ArgumentError, "Config `#{dp}` not marked deprecated" unless @plugin.class.get_config.dig(dp.to_s, :deprecated)
           end
         end
 
         def ensure_config_exists!(config)
-          fail ArgumentError, "Config `#{config}` does not exists" unless @plugin.class.get_config.include?(config)
+          fail ArgumentError, "Config `#{config}` does not exists" unless @plugin.class.get_config.include?(config.to_s)
         end
       end
 

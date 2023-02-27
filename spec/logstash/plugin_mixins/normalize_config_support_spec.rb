@@ -45,13 +45,22 @@ describe LogStash::PluginMixins::NormalizeConfigSupport do
 
   context 'normalize_config' do
     it 'should fail if canonical config is nil' do
-      expect { subject.normalize_config(nil) do |_|
-      end }.to raise_error(ArgumentError, /`canonical_config` is required/)
+      expect {
+        subject.normalize_config(nil) do |_|
+        end
+      }.to raise_error(ArgumentError, /`canonical_config` is required/)
     end
 
     it 'should fail if canonical config does not exists' do
-      expect { subject.normalize_config('unknown_config') do |_|
-      end }.to raise_error(ArgumentError, /Config `unknown_config` does not exists/)
+      expect {
+        subject.normalize_config('unknown_config') do |_|
+        end
+      }.to raise_error(ArgumentError, /Config `unknown_config` does not exists/)
+
+      expect {
+        subject.normalize_config(:unknown_config) do |_|
+        end
+      }.to raise_error(ArgumentError, /Config `unknown_config` does not exists/)
     end
 
     it 'should fail if configurator block is not given' do
