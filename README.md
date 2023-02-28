@@ -1,6 +1,6 @@
-# Config Deprecation Support Mixin
+# Normalize Config Support Mixin
 
-[![Build Status](https://travis-ci.com/logstash-plugins/logstash-mixin-config_deprecation_support.svg?branch=main)](https://travis-ci.com/logstash-plugins/logstash-mixin-config_deprecation_support)
+[![Build Status](https://travis-ci.com/logstash-plugins/logstash-mixin-normalize_config_support.svg?branch=main)](https://travis-ci.com/logstash-plugins/logstash-mixin-normalize_config_support)
 
 This gem can be included in any `LogStash::Plugin`, and will provide utilities methods
 that can be used by the plugins to
@@ -15,7 +15,7 @@ extract and normalize configs.
     Gem::Specification.new do |s|
       # ...
 
-      s.add_runtime_dependency 'logstash-mixin-config_deprecation_support', '~>1.0'
+      s.add_runtime_dependency 'logstash-mixin-normalize_config_support', '~>1.0'
     end
     ~~~
 
