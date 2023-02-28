@@ -55,7 +55,7 @@ module LogStash
         # @param deprecated_params [String...]: the deprecated param names
         # @return [void]
         def with_deprecated_mapping(*deprecated_params, &value_transformer)
-          fail 'Deprecated mappings already configured for this config normalizer' unless @deprecated_mappings.nil?
+          fail(ArgumentError, 'Deprecated mappings already configured for this config normalizer') unless @deprecated_mappings.nil?
           require_value!('deprecated_params', deprecated_params)
           ensure_deprecated!(deprecated_params)
           check_value_transformer!(deprecated_params, value_transformer)
@@ -80,7 +80,7 @@ module LogStash
         #
         # @return [Object]: the value of the canonical config param or an equivalent derived from provided deprecated params
         def value
-          fail 'No deprecated mappings configured for this config normalizer' if @deprecated_mappings.nil?
+          fail(ArgumentError, 'No deprecated mappings configured for this config normalizer') if @deprecated_mappings.nil?
 
           deprecated_params, value_transformer = @deprecated_mappings
           provided_deprecated_params = @plugin.original_params.keys.select { |k| deprecated_params.include?(k) }

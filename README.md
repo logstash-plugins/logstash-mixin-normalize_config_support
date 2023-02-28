@@ -46,8 +46,8 @@ extract and normalize configs.
      @ssl_verification_mode = normalize_config(:ssl_verification_mode) do |normalize|
         normalize.with_deprecated_mapping(:ssl_verify_mode) do |ssl_verify_mode|
            case ssl_verify_mode
-           when "none" then "none"
-           when "peer" then "certificate"
+           when "none"       then "none"
+           when "peer"       then "certificate"
            when "force_peer" then "full"
            else fail(LogStash::ConfigurationError, "Unsupported value #{ssl_verify_mode} for deprecated option `ssl_verify_mode`")
         end

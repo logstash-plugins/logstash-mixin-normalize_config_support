@@ -1,2 +1,2 @@
 ## 1.0.0
-  - Added the `config_with_deprecated_target!` utility. [#2](https://github.com/logstash-plugins/logstash-mixin-config_deprecation_support/pulls/2)
+  - Added the `normalize_config` utility, supporting `with_deprecated_mapping` and `with_deprecated_alias` helpers for extracting the effective value for a config option possibly using deprecated counterparts. [#2](https://github.com/logstash-plugins/logstash-mixin-config_deprecation_support/pulls/2)
