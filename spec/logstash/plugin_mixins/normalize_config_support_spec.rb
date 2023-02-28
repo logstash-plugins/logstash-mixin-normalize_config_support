@@ -120,7 +120,7 @@ describe LogStash::PluginMixins::NormalizeConfigSupport do
               normalizer.with_deprecated_mapping('another_deprecated_config') do |_|
               end
             end
-          }.to raise_error(RuntimeError, /Deprecated mappings already configured for this config normalizer/)
+          }.to raise_error(ArgumentError, /Deprecated mappings already configured for this config normalizer/)
         end
       end
 
@@ -147,7 +147,7 @@ describe LogStash::PluginMixins::NormalizeConfigSupport do
           expect {
             subject.normalize_config('new_config') do |normalizer|
             end
-          }.to raise_error(RuntimeError, /No deprecated mappings configured for this config normalizer/)
+          }.to raise_error(ArgumentError, /No deprecated mappings configured for this config normalizer/)
         end
       end
 
