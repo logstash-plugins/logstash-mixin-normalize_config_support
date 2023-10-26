@@ -8,7 +8,7 @@ extract and normalize configs.
 
 ## Usage
 
-1. Add version `~>1.0` of this gem as a runtime dependency of your Logstash
+1. Add version `~>1.1` of this gem as a runtime dependency of your Logstash
    plugin's `gemspec`:
 
     ~~~ ruby
@@ -39,6 +39,13 @@ extract and normalize configs.
       config
     - `with_deprecated_alias`: Wholly-alias a deprecated config to the canonical
       config
+    - `with_required_aliases`: Map one or more configs as required. When the canonical 
+      config is set, all required aliases must have a value or default.
+    - `with_dependent_aliases`: Map one or more configs as dependent of the current canonical config.
+      If any dependent aliases are provided, the canonical config must also be provided.
+    - `with_conflicting_aliases`: Map one or more configs that conflicts with the current canonical config.
+      If the canonical config value is provided, all conflicting aliases must not be set.
+
 
    ~~~ ruby
    def register
@@ -61,6 +68,17 @@ extract and normalize configs.
         normalize.with_deprecated_mapping(:tls_min_version, :tls_max_version) do |tls_min, tls_max|
            TLS.get_supported(tls_min..tls_max).map(&:name)
         end
+     end
+   
+     @ssl_truststore_path = normalize_config(:ssl_truststore_path) do |normalize|
+        normalize.with_deprecated_alias(:truststore)
+        normalize.with_dependent_aliases(:ssl_truststore_password, :ssl_truststore_type)
+     end
+   
+     normalize_config(:ssl_certificate) do |normalize|
+        normalize.with_deprecated_alias(:client_cert) 
+        normalize.with_required_aliases(:ssl_key)
+        normalize.with_conflicting_aliases(:ssl_keystore_path, :ssl_keystore_password, :ssl_keystore_type)
      end
    end
    ~~~

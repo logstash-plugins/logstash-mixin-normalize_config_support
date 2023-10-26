@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'logstash-mixin-normalize_config_support'
-  s.version       = "1.0.0"
+  s.version       = "1.1.0"
   s.licenses      = %w(Apache-2.0)
   s.summary       = "Support for Logstash plugins wishing to deprecate config options"
   s.description   = "This gem is meant to be a dependency of any Logstash plugin that needs to normalize config options, supporting canonical options along-side deprecated options"
