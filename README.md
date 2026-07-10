@@ -1,6 +1,6 @@
 # Normalize Config Support Mixin
 
-[![Build Status](https://travis-ci.com/logstash-plugins/logstash-mixin-normalize_config_support.svg?branch=main)](https://travis-ci.com/logstash-plugins/logstash-mixin-normalize_config_support)
+[![Unit Tests](https://github.com/logstash-plugins/logstash-mixin-normalize_config_support/actions/workflows/unit-tests.yml/badge.svg?branch=main)](https://github.com/logstash-plugins/logstash-mixin-normalize_config_support/actions/workflows/unit-tests.yml)
 
 This gem can be included in any `LogStash::Plugin`, and will provide utilities methods
 that can be used by the plugins to
